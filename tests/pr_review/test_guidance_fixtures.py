@@ -87,7 +87,7 @@ print(json.dumps(result))
         self.assertEqual(len(set(diffs)), 1)
 
     def test_context_is_external_and_oracle_is_not_a_reviewer_input(self):
-        oracle = self.destination / "evaluator-only/oracles.json"
+        oracle = self.destination / "reference/expectations.json"
         self.assertTrue(oracle.is_file())
         for case in self.cases.values():
             repo = Path(case["repo"])

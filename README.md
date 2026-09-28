@@ -93,11 +93,10 @@ See [CONTRIBUTING.md](CONTRIBUTING.md) for validation and packaging checks.
 
 ## Validation
 
-The [development suite](eval/skill_review/README.md) contains real offline
-regression tests and synthetic review fixtures. It tests fixture behavior and
-evaluation bookkeeping; it does not call models or establish production review
-accuracy. Installation checks verify packaged files, not review quality inside
-every client. See [validation status](docs/validation.md) for what was executed.
+The [test suite](tests/README.md) checks package installation and synthetic review
+fixtures. These tests do not call models or measure review quality. The collection
+does not include an evaluation runner or benchmark. See
+[validation status](docs/validation.md) for what was executed.
 
 ## Design and license
 

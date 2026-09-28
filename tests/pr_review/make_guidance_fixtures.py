@@ -1,5 +1,5 @@
 #!/usr/bin/env python3
-"""Build independent PRs for external guidance loading evaluations."""
+"""Build independent PR fixtures with scoped external guidance."""
 
 import argparse
 import json
@@ -224,7 +224,7 @@ def generate(destination):
             }
         )
     (destination / "manifest.json").write_text(json.dumps(metadata, indent=2) + "\n")
-    oracle = destination / "evaluator-only" / "oracles.json"
+    oracle = destination / "reference" / "expectations.json"
     oracle.parent.mkdir()
     oracle.write_text(json.dumps(ORACLES, indent=2) + "\n")
     return metadata

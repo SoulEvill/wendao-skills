@@ -14,7 +14,7 @@ delegation, authentication, and publishing permission are separate capabilities.
 ```sh
 uv sync --locked
 uv run python scripts/validate_package.py
-uv run python -m unittest discover -s eval/skill_review -v
+uv run python -m unittest discover -s tests/pr_review -v
 bash tests/package.sh
 ```
 
@@ -22,10 +22,10 @@ The package check uses the real skills CLI to install into a temporary project f
 Cursor, Claude Code, and Codex. It does not install into your global skill folders,
 run a model, or publish a review.
 
-For changes to review decisions, add a discriminating fixture or run a bounded
-review exercise. Keep expected answers out of the reviewer's input. Document the
-actual host and settings, checks performed, evidence, and remaining limitations.
-See [eval instructions](eval/skill_review/README.md).
+For changes to review decisions, use a relevant fixture or a bounded manual review
+exercise. Fixture tests verify the example inputs, not the model's review quality.
+Keep expected answers out of reviewer input and record what was actually checked.
+See [test instructions](tests/README.md).
 
 ## Publishing
 

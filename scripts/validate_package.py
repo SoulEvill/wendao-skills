@@ -74,7 +74,7 @@ def main():
         else:
             errors.extend(check_skill(directory))
     for document in [ROOT / "README.md", ROOT / "CONTRIBUTING.md",
-                     ROOT / "eval" / "skill_review" / "README.md"]:
+                     ROOT / "tests" / "README.md"]:
         errors.extend(check_links(document, ROOT))
     if errors:
         raise SystemExit("\n".join(errors))

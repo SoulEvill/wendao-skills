@@ -7,10 +7,7 @@ from pathlib import Path
 from unittest.mock import patch
 
 from make_presentation_fixtures import generate
-from runs import digest
-
-HERE = Path(__file__).resolve().parent
-SKILL = HERE.parents[1] / "skills/pr-review"
+from fixture_files import digest
 
 
 class PresentationFixtureTests(unittest.TestCase):
@@ -19,8 +16,8 @@ class PresentationFixtureTests(unittest.TestCase):
         cls.workspace = tempfile.TemporaryDirectory(prefix="presentation-fixture-tests-")
         cls.root = Path(cls.workspace.name)
         with patch("subprocess.check_output", side_effect=AssertionError("No host execution")):
-            cls.manifest = generate(cls.root / "cases", SKILL)
-        cls.oracles = json.loads((cls.root / "cases/evaluator-only/oracles.json").read_text())
+            cls.manifest = generate(cls.root / "cases")
+        cls.oracles = json.loads((cls.root / "cases/reference/expectations.json").read_text())
         cls.cases = {
             cls.oracles["cases"][case["id"]]["source_id"]: json.loads(
                 Path(case["context"]).read_text()
@@ -31,19 +28,17 @@ class PresentationFixtureTests(unittest.TestCase):
     def tearDownClass(cls):
         cls.workspace.cleanup()
 
-    def test_preparation_keeps_grading_answers_out_of_reviewer_inputs(self):
+    def test_contexts_keep_reference_answers_separate(self):
         self.assertEqual(len(self.manifest["cases"]), 11)
-        oracle = self.root / "cases/evaluator-only/oracles.json"
+        oracle = self.root / "cases/reference/expectations.json"
         for case in self.manifest["cases"]:
-            self.assertFalse(any(oracle.is_relative_to(Path(p)) for p in case["allowed_inputs"]))
+            self.assertFalse(oracle.is_relative_to(Path(case["context"]).parent))
             context = json.loads(Path(case["context"]).read_text())
             self.assertNotIn("oracle", context)
             self.assertNotIn("recommendation", context)
             self.assertNotIn("confirmed_root_causes", context)
             self.assertEqual(len(context["source_coverage"]), 9)
             self.assertEqual(digest(case["context"]), case["context_hash"])
-            self.assertEqual(digest(case["request"]), case["request_hash"])
-        self.assertEqual(digest(self.root / "cases/skill"), self.manifest["skill_hash"])
 
     def test_peer_snapshots_preserve_effective_state_instead_of_latest_comment(self):
         active = self.cases["active-peer-request"]["peer_state"]
@@ -92,11 +87,11 @@ class PresentationFixtureTests(unittest.TestCase):
                             for case in self.cases.values()))
 
     def test_contexts_are_reproducible_and_existing_outputs_are_preserved(self):
-        repeated = generate(self.root / "repeated", SKILL)
+        repeated = generate(self.root / "repeated")
         self.assertEqual([case["context_hash"] for case in repeated["cases"]],
                          [case["context_hash"] for case in self.manifest["cases"]])
         with self.assertRaises(ValueError):
-            generate(self.root / "cases", SKILL)
+            generate(self.root / "cases")
 
 
 if __name__ == "__main__":
