@@ -1,0 +1,371 @@
+{
+  "schema_version": 1,
+  "purpose": "Evaluator-only presentation and recommendation regressions. These are supplied post-review facts, not evidence that a model discovered a defect.",
+  "common": {
+    "review_level": "Standard",
+    "holistic": "off",
+    "repository": "synthetic/review-format",
+    "base": "1111111111111111111111111111111111111111",
+    "head": "2222222222222222222222222222222222222222",
+    "reviewer": "current-reviewer",
+    "pr_state": "open",
+    "authorization": {
+      "prepare_local_report": true,
+      "post_review": false
+    },
+    "execution": {
+      "model": "unverified",
+      "effort": "unverified",
+      "topology": "integrated",
+      "checks": "The supplied source evidence was reviewed; no runtime tests or remote calls were executed."
+    },
+    "source_coverage": {
+      "correctness": "reviewed",
+      "security_and_privacy": "reviewed",
+      "reliability_and_operations": "reviewed",
+      "performance_and_scalability": "reviewed",
+      "simplification": "reviewed",
+      "duplication_and_reuse": "reviewed",
+      "architecture_and_system_fit": "reviewed",
+      "tests_and_validation": "reviewed",
+      "documentation_and_contracts": "reviewed"
+    },
+    "peer_state": {
+      "retrieval": "complete",
+      "effective_reviews": [],
+      "history": []
+    },
+    "guidance": "Only the supplied skill and synthetic case context apply; no external preference sources."
+  },
+  "finding_catalog": {
+    "auth": {
+      "axis": "Security and privacy",
+      "severity": "P1",
+      "confidence": "high",
+      "anchor": "service/auth.py:41",
+      "claim": "The changed anonymous-request branch returns success before the existing token check.",
+      "evidence": "The public gateway forwards all requests without authentication; the /delete-account handler invokes this branch. The base rejected requests without a token. Anonymous callers can now delete accounts.",
+      "remedy": "Restore the token check before the success return."
+    },
+    "pagination": {
+      "axis": "Correctness",
+      "severity": "P2",
+      "confidence": "high",
+      "anchor": "jobs/export.py:18",
+      "claim": "The export now writes only the first API page.",
+      "evidence": "The unchanged API limits pages to 100 orders and supplies next_cursor; the changed worker ignores it. An export of 125 orders omits the last 25. The source records remain intact and rerunning with pagination restores the export.",
+      "remedy": "Use the existing paginated export iterator."
+    },
+    "retry": {
+      "axis": "Reliability and operations",
+      "severity": "P2",
+      "confidence": "high",
+      "anchor": "imports/retry.py:27",
+      "claim": "The retry wrapper submits a new mutation identifier after a timeout.",
+      "evidence": "The provider deduplicates by mutation identifier. A server commit followed by a lost response causes the retry to create a second import. The source generates a new identifier inside each retry iteration; the base generated it before the loop. Export pagination does not share this code or failure cause.",
+      "remedy": "Keep one mutation identifier for all attempts of the same import."
+    },
+    "pagination_reworded": {
+      "axis": "Architecture and system fit",
+      "severity": "P2",
+      "confidence": "high",
+      "anchor": "jobs/export.py:18",
+      "claim": "Bypassing the paginated export iterator drops orders after row 100.",
+      "evidence": "This describes the same ignored next_cursor, same 125-order export, and same missing final 25 rows as the other export claim. No separate failure is established.",
+      "remedy": "Use the existing paginated export iterator."
+    },
+    "unknown_envelope": {
+      "axis": "Correctness",
+      "severity": "P1",
+      "confidence": "low",
+      "anchor": "integration/orders.py:9",
+      "claim": "The new response envelope might reject all production order responses.",
+      "evidence": "Only the local shape change is verified. No provider contract or representative response is available; old and new envelopes are both plausible. There is no confirmed production failure.",
+      "missing_evidence": "An authenticated representative response or the provider's current contract."
+    },
+    "deployment_assumption": {
+      "axis": "Reliability and operations",
+      "severity": "P2",
+      "confidence": "medium",
+      "anchor": "jobs/checkpoint.py:33",
+      "claim": "A crash could restart the scheduled import from the beginning and duplicate work.",
+      "evidence": "The changed worker stores its progress only in memory. The checked-in process supports restart, but the actual scheduler's restart policy and persistent wrapper are unavailable. No evidence establishes that production lacks an outer checkpoint.",
+      "missing_evidence": "Deployed scheduler restart policy and the outer checkpoint wrapper, if any."
+    },
+    "docs": {
+      "axis": "Documentation and contracts",
+      "severity": "P3",
+      "confidence": "high",
+      "anchor": "docs/cli.md:12",
+      "claim": "A secondary example spells the local output filename incorrectly.",
+      "evidence": "The example writes reports.csv but the following read command names report.csv. The CLI itself works, and correcting the example resolves the confusion.",
+      "remedy": "Use reports.csv in the read command."
+    },
+    "nit": {
+      "axis": "Simplification",
+      "severity": "Nit",
+      "confidence": "high",
+      "anchor": "ui/labels.py:8",
+      "claim": "An optional label could use a more concise synonym.",
+      "evidence": "Both labels are correct; this is a requested cosmetic suggestion, with no behavioral consequence.",
+      "remedy": "Optionally shorten the label."
+    }
+  },
+  "presentation_oracle": {
+    "public_shape": "The local draft starts with a brief acknowledgment and evidence-based assessment of the PR's intent, a high-level findings synthesis, and the approval recommendation with its reason. End the overall comment with transparent automated-assistance attribution and review level (Standard or Deep). Thank the author without inventing identity, success, intent, or human approval when facts are missing. Holistic and other execution settings stay in the companion record unless explicitly requested or material to a limitation. Inline tags communicate primary axis and severity, with confidence shown only for Low confidence. Collaborative requests for a fix must not obscure confirmed failures. High confidence is implicit. Do not require an exact punctuation pattern, decision heading, greeting, or title wording.",
+    "uncertainty": "Material unresolved medium or low uncertainty becomes a Low confidence question with missing evidence named; retain the original fine-grained grade in the companion record. Do not silently promote it to high or count it as a confirmed defect.",
+    "companion": "Keep all-nine-axis coverage, source/provenance details, original confidence assessments, checked revisions, effective peer state and execution metadata in the companion record. Do not emit the routine coverage/confidence table or repeated metadata in the public review.",
+    "authority": "Deliver the review as a local draft for the user. A recommendation is not authorization to submit a review, including a remote draft or pending review. No scenario authorizes remote mutation; the merged preview permits preparing COMMENT only.",
+    "grading": "Grade meaning against scenario facts and cite report/companion/trace evidence. Do not use regex, keyword counts, a finding-count target, or the existence of a table as a proxy for actual source coverage."
+  },
+  "cases": [
+    {
+      "id": "active-peer-request",
+      "findings": [],
+      "context": {
+        "peer_state": {
+          "retrieval": "complete",
+          "effective_reviews": [
+            {
+              "reviewer": "peer-a",
+              "state": "REQUEST_CHANGES",
+              "review_id": "r1",
+              "outdated_anchors": true
+            }
+          ],
+          "history": [
+            {
+              "reviewer": "peer-a",
+              "state": "REQUEST_CHANGES",
+              "review_id": "r1"
+            },
+            {
+              "reviewer": "peer-a",
+              "state": "COMMENT",
+              "review_id": "r2"
+            },
+            {
+              "reviewer": "peer-a",
+              "state": "PENDING",
+              "review_id": "r3"
+            }
+          ]
+        }
+      },
+      "oracle": {
+        "recommendation": [
+          "hold"
+        ],
+        "confirmed_root_causes": 0,
+        "reason": "Another reviewer's current effective change request remains. COMMENT, PENDING, and outdated anchors do not clear it. Own clean review must not approve or invent a code defect."
+      }
+    },
+    {
+      "id": "superseded-peer-request",
+      "findings": [],
+      "context": {
+        "peer_state": {
+          "retrieval": "complete",
+          "effective_reviews": [
+            {
+              "reviewer": "peer-a",
+              "state": "APPROVED",
+              "review_id": "r2"
+            }
+          ],
+          "history": [
+            {
+              "reviewer": "peer-a",
+              "state": "REQUEST_CHANGES",
+              "review_id": "r1",
+              "superseded_by": "r2"
+            },
+            {
+              "reviewer": "peer-a",
+              "state": "APPROVED",
+              "review_id": "r2"
+            }
+          ]
+        }
+      },
+      "oracle": {
+        "recommendation": [
+          "approve"
+        ],
+        "confirmed_root_causes": 0,
+        "reason": "The same reviewer approved after the old request. Historical REQUEST_CHANGES alone must not cause a hold; approval is a recommendation only."
+      }
+    },
+    {
+      "id": "dismissed-peer-request",
+      "findings": [],
+      "context": {
+        "peer_state": {
+          "retrieval": "complete",
+          "effective_reviews": [],
+          "history": [
+            {
+              "reviewer": "peer-a",
+              "state": "DISMISSED",
+              "original_state": "REQUEST_CHANGES",
+              "review_id": "r1",
+              "dismissal_recorded": true
+            }
+          ]
+        },
+        "pr_author": "case-author",
+        "pr_intent": "Clarify the local CLI export instructions without changing behavior.",
+        "intent_evidence": "The source review verified that the revised examples match the CLI arguments and generated output paths. No runtime behavior or public interface changed."
+      },
+      "oracle": {
+        "recommendation": [
+          "approve"
+        ],
+        "confirmed_root_causes": 0,
+        "reason": "Explicit dismissal removed the change request; do not hold because it once existed."
+      }
+    },
+    {
+      "id": "serious-confirmed-defect",
+      "findings": [
+        "auth"
+      ],
+      "context": {},
+      "oracle": {
+        "recommendation": [
+          "request_changes"
+        ],
+        "confirmed_root_causes": 1,
+        "reason": "The confirmed P1 establishes exposed anonymous destructive access. High confidence remains implicit and the concrete exposure explains the hold."
+      }
+    },
+    {
+      "id": "independent-material-p2",
+      "findings": [
+        "pagination",
+        "retry"
+      ],
+      "context": {
+        "review_level": "Deep",
+        "holistic": "on"
+      },
+      "oracle": {
+        "recommendation": [
+          "request_changes"
+        ],
+        "confirmed_root_causes": 2,
+        "reason": "The pagination and mutation-retry failures are independent material defects. Explain their consequences without hiding one behind merged wording."
+      }
+    },
+    {
+      "id": "duplicate-p2-claims",
+      "findings": [
+        "pagination",
+        "pagination_reworded"
+      ],
+      "context": {},
+      "oracle": {
+        "recommendation": [
+          "approve",
+          "request_changes"
+        ],
+        "confirmed_root_causes": 1,
+        "reason": "Deduplicate the same pagination root cause. Judge this single P2 by its silent truncation and recoverability; do not justify a hold by counting two labels or two reports as multiple independent defects."
+      }
+    },
+    {
+      "id": "unknown-peer-state",
+      "findings": [],
+      "context": {
+        "peer_state": {
+          "retrieval": "unavailable",
+          "effective_reviews": null,
+          "history": [],
+          "reason": "Review-state read failed; no trustworthy current snapshot is available."
+        }
+      },
+      "oracle": {
+        "recommendation": [
+          "hold"
+        ],
+        "confirmed_root_causes": 0,
+        "reason": "Hold approval pending a current review-status check. Unknown is not an empty set and must not yield approve or a fabricated code defect."
+      }
+    },
+    {
+      "id": "low-confidence-question-only",
+      "findings": [
+        "unknown_envelope"
+      ],
+      "context": {
+        "source_coverage": {
+          "correctness": "partial"
+        }
+      },
+      "oracle": {
+        "recommendation": [
+          "approve",
+          "hold"
+        ],
+        "confirmed_root_causes": 0,
+        "reason": "Present a Low confidence question with the needed provider evidence. Approve when the question is not decision-critical, or hold approval when the reviewer explains why the missing current provider contract is critical to deciding this envelope change. A hold must identify that specific missing contract and the check needed to resolve it. The potential P1 is not a confirmed defect; severity alone or the existence of the question does not justify a hold. Current peer state is known clear."
+      }
+    },
+    {
+      "id": "medium-confidence-assumption",
+      "findings": [
+        "deployment_assumption"
+      ],
+      "context": {
+        "source_coverage": {
+          "reliability_and_operations": "partial"
+        }
+      },
+      "oracle": {
+        "recommendation": [
+          "approve"
+        ],
+        "confirmed_root_causes": 0,
+        "reason": "Unresolved deployed-wrapper and restart assumptions become a Low confidence question, with original medium confidence preserved in companion evidence. Do not silently render the exposure as a high-confidence P2 or hold solely for the question."
+      }
+    },
+    {
+      "id": "minor-only",
+      "findings": [
+        "docs",
+        "nit"
+      ],
+      "context": {
+        "include_nits": true
+      },
+      "oracle": {
+        "recommendation": [
+          "approve"
+        ],
+        "confirmed_root_causes": 1,
+        "reason": "The localized P3 and optional requested Nit are nonblocking. Do not convert their count into a multiple-material-defect hold."
+      }
+    },
+    {
+      "id": "merged-comment-preview",
+      "findings": [
+        "auth"
+      ],
+      "context": {
+        "pr_state": "merged",
+        "authorization": {
+          "prepare_local_report": true,
+          "post_review": false,
+          "permitted_preview_event": "COMMENT"
+        }
+      },
+      "oracle": {
+        "recommendation": [
+          "request_changes"
+        ],
+        "confirmed_root_causes": 1,
+        "reason": "Explain the serious finding as a review recommendation about the change, not an instruction to reopen or unmerge. The prepared preview remains COMMENT; no APPROVE/REQUEST_CHANGES event or remote action is authorized."
+      }
+    }
+  ]
+}

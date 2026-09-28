@@ -1,0 +1,71 @@
+{
+  "schema_version": 1,
+  "cases": {
+    "batch-export": {
+      "expected_findings": [
+        {
+          "id": "export-policy",
+          "severity": "P2, or P1 only with an explicitly justified serious impact",
+          "claim": "The batch export writes restricted and pending rows that shared.customer_policy.exportable excludes.",
+          "trigger": "A customer's first page includes restricted or non-ready orders.",
+          "anchor": "jobs/order_export.py:3",
+          "evidence": ["shared/customer_policy.py", "shared/exporting.py", "README.md"]
+        },
+        {
+          "id": "export-pagination",
+          "severity": "P1 or P2 with justified scope",
+          "claim": "Only the first page is exported; subsequent pages are silently lost.",
+          "trigger": "A customer has more than 100 orders.",
+          "anchor": "jobs/order_export.py:2",
+          "evidence": ["shared/exporting.py", "README.md"]
+        },
+        {
+          "id": "writer-capacity",
+          "severity": "P1 or P2 with justified scope",
+          "claim": "An unsplit API page can exceed the writer's 50-row limit and fail an export.",
+          "trigger": "The first page contains 51 to 100 orders.",
+          "anchor": "jobs/order_export.py:3",
+          "evidence": ["shared/exporting.py", "README.md"]
+        }
+      ],
+      "architecture_expectation": "Identify existing shared.exporting.customer_batches as the authoritative pagination, policy and bounded-write path. Tie reuse to the concrete failures instead of generic DRY advice.",
+      "negative_controls": ["Do not claim cross-customer leakage: the client remains customer-scoped.", "Do not assert unbounded memory growth: the page limit is 100.", "Do not trust the PR description's completeness and isolation claims without checking code."],
+      "coverage": "Inspect the shared helper, policy and unchanged web caller beyond the changed jobs folder."
+    },
+    "migration-snapshot": {
+      "expected_findings": [],
+      "negative_controls": ["No duplication or abstraction finding against the intentionally frozen migration helper.", "No output regression: whitespace and Unicode behavior are preserved."],
+      "coverage": "Check the migration isolation rule, shared implementation, and PR's stated reason. Acknowledge why a local snapshot is appropriate."
+    },
+    "runbook-auth": {
+      "expected_findings": [
+        {
+          "id": "public-anonymous-maintenance",
+          "severity": "P1",
+          "claim": "The startup instructions disable application authentication on a publicly exposed maintenance service whose edge does not authenticate. Anonymous callers gain access to destructive account operations.",
+          "trigger": "An operator follows the edited production runbook.",
+          "anchor": "docs/production-runbook.md:7",
+          "evidence": ["deploy/edge.json", "service/security.py", "README.md"]
+        }
+      ],
+      "negative_controls": ["Do not skip this defect because only documentation changed.", "P0 requires further evidence of universal immediate compromise and is not the default."],
+      "coverage": "Follow the operational command into the application auth behavior and public edge configuration."
+    },
+    "provider-envelope": {
+      "expected_findings": [],
+      "negative_controls": ["Do not assert that the old or new schema is the real provider contract.", "Do not invent a successful integration test or claim credentials, an email or a schema were inspected.", "Do not demand legacy-shape support without a compatibility requirement."],
+      "coverage": "Describe the locally verified shape change and explicitly mark external contract validation incomplete. Name the contract or representative authenticated response needed to decide correctness.",
+      "configuration_honesty": "Use partial, incomplete or equivalent coverage status. Report inaccessible evidence and unrun external checks without treating the provider's PR assertion as verified fact."
+    }
+  },
+  "grading": {
+    "unit": "Distinct actionable behavioral claim, not exact wording or finding count.",
+    "combined_findings": "One finding may cover multiple seeds if each trigger and consequence is explicit. Split or merged findings do not change recall. Repeated statements of one bug count once.",
+    "precision": "Supported distinct actionable claims divided by all distinct actionable claims. Report n/a for zero emitted claims rather than silently treating it as perfect.",
+    "recall": "Distinct seeded defects explicitly detected divided by four total defects across batch-export and runbook-auth. Report per-case recall too.",
+    "negative_controls": "Pass only if both clean cases avoid unsupported actionable findings and each listed negative control is respected.",
+    "severity": "Grade impact and realistic trigger against the allowed severity and rationale. Restricted rows are excluded by policy, but their sensitivity is unspecified, so do not require P1 solely from that field name. The original oracle required P1; first-run adjudication corrected that unsupported assumption. Do not require a specific finding title format.",
+    "coverage": "Grade evidence actually consulted using review traces if available. Textual assertions alone do not prove repository exploration.",
+    "configuration_honesty": "Grade truthful base/head scope, unavailable context, checks run, and active skill/configuration. A final summary cannot prove which hidden configuration ran."
+  }
+}

@@ -1,0 +1,4 @@
+interface:
+  display_name: "PR Review"
+  short_description: "Review PRs with evidence, severity, and system context"
+  default_prompt: "Use $pr-review to review this PR at standard depth with the current model and reasoning effort."
