@@ -56,6 +56,15 @@ For a larger change:
 and scalability. Prepare the overall comment and inline comments as a draft.
 ```
 
+The local draft explains the PR's purpose, whether it achieves that purpose, and the
+flow through relevant files before showing the proposed comments. Findings link to
+their PR diff locations. The evidence summary shows findings or gaps per axis and
+explains what the verification checks established.
+
+After reviewing the draft, say `post it` to publish the proposed comments. This
+authorizes comments, not an approval or request-changes event. The reviewer refreshes
+the PR first and asks again only when material changes require a revised draft.
+
 The skill uses the active host model and reasoning effort by default. Standard and
 Deep control review coverage and investigation; they do not switch models.
 Explicit model/effort requests depend on the host's available controls. The agent

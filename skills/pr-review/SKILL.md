@@ -100,12 +100,15 @@ Classify independent pre-existing risks separately only when useful to the reque
 
 ## Deliver the review
 
-Use [report.md](references/report.md). Open with a brief acknowledgment of the author's work and a
-grounded assessment of the PR's intent, then summarize the main findings and explain the
-approval recommendation. End with a short automated-assistance attribution and the review
-level (Standard or Deep). Write in a
-natural, supportive voice without inventing praise or implying human approval. Keep
-holistic and other execution settings in the companion record.
+Use [report.md](references/report.md). Start the local handoff with what the PR tries to
+change, whether it achieves that intent, and a concise flow through the relevant files
+and symbols. Then show the proposed overall and inline comments, followed by the evidence
+and verification summary. Keep this local explanation outside the proposed comment bodies.
+
+The proposed overall comment opens with a brief acknowledgment and grounded assessment,
+then summarizes findings and the approval recommendation. End it with automated-assistance
+attribution and a plain, non-bold review level (Standard or Deep). Write naturally without
+inventing praise or implying human approval. Keep execution settings in the companion record.
 Before recommending approval, check current effective reviews: another reviewer's
 outstanding request for changes means hold approval. Confirmed P0/P1 findings mean request
 changes; multiple independent material P2 findings normally do too. Explain the consequence,
@@ -115,13 +118,19 @@ Lead each inline comment with axis and severity tags. High confidence is implici
 `Low confidence` only for uncertain questions, with potential severity clearly qualified.
 Do not hide material uncertainty behind the absent confidence tag. Order confirmed findings
 by severity and keep questions separate; they do not count as confirmed defects.
+Give draft findings stable IDs and clickable PR web diff links to the verified line range,
+so the user can navigate to the comment location and post the supplied body manually.
 
 Keep the public overall comment short. Retain all-axis coverage, detailed confidence,
 revisions, guidance, execution controls, and checks in a companion evidence record rather
-than listing them in every comment. Surface material limitations that affect the decision.
+than listing them in every comment. For each axis, state the outcome explicitly and refer
+to finding IDs; distinguish no issues found from incomplete or skipped coverage. Explain
+what each executed check established. Surface limitations that affect the decision.
 "No supported findings in the reviewed scope" does not establish system correctness.
 Recheck head and effective review status before authorized publication; if either changed,
 refresh the recommendation and review any new code before updating line anchors.
+After the user sees a draft, "post it" authorizes publishing that draft's proposed comments.
+Follow report.md's publication rules without asking for the same permission again.
 
 ## Examples
 

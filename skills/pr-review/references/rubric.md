@@ -71,5 +71,7 @@ was missing. `skipped` means the planned check was not performed, for example du
 budget limit. Justify `not_applicable` from this change, not from a missing tool.
 
 State missing context honestly even if another axis has a high-confidence finding.
+Use report.md's separate outcome labels and finding IDs so the user can distinguish
+"No issues found in reviewed scope" from "Finding F1", a question, or missing coverage.
 Do not calculate an aggregate quality score that hides a serious defect behind strong
 scores elsewhere.
