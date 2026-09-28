@@ -6,7 +6,10 @@ Cursor, Claude Code, Codex, or another client that supports
 
 ## Install
 
-Requires Node.js/npm and Git. For Cursor, available across your projects:
+Requires Node.js/npm and Git. Installing from a private repository also requires
+repository access and Git authentication.
+
+For Cursor, available across your projects:
 
 ```sh
 npx skills@latest add SoulEvill/wendao-skills --skill pr-review --agent cursor -g
