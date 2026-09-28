@@ -13,6 +13,8 @@ On 2026-09-27:
 | Skill Creator validation | Passed. |
 | Offline regression suite | All 32 tests passed. |
 | Local installation using `npx skills@latest` | Passed for Cursor, Claude Code, and Codex in a disposable project. All installed skill files matched the source. |
+| GitHub installation using `SoulEvill/wendao-skills` | Passed for the same three clients using the authenticated repository checkout. Installed files matched the source. |
+| GitHub Actions | Package validation, all 32 regression tests, and the installer smoke check passed on Ubuntu. |
 
 The installer used `.agents/skills/pr-review` for Cursor and Codex, and linked
 `.claude/skills/pr-review` for Claude Code. It did not modify global installations.
