@@ -1,5 +1,5 @@
 ---
-name: pr-review
+name: wd-pr-review
 description: Review a pull request or base/head diff across correctness, simplicity, reuse, architecture, security, reliability, performance, tests, and docs, with selectable review depth and evidence-based severity and confidence.
 ---
 
@@ -56,7 +56,7 @@ isolated permitted workspace; inspect unfamiliar test/setup commands first.
 ## Optional external guidance
 
 Consume preferences supplied by the user or their framework without modifying them.
-Accept `preferences_root` (the directory containing `pr-review/`) and an optional
+Accept `preferences_root` (the directory containing `wd-pr-review/`) and an optional
 `preferences_repo` folder key explicitly bound to the reviewed repository. These can
 be supplied once through applicable repository or host instructions. A host may instead
 provide selected guidance sources with their repository/path scope.
@@ -134,7 +134,7 @@ Follow report.md's publication rules without asking for the same permission agai
 
 ## Examples
 
-- "Use $pr-review on PR 42 in this repo, standard depth, current model and effort."
+- "Use $wd-pr-review on PR 42 in this repo, standard depth, current model and effort."
 - "Review this PR with model `<available-model-id>`, reasoning effort `<native-value>`,
   deep depth, holistic on. Return the review here."
 - "Standard review, but include a holistic reuse and architecture pass."

@@ -17,7 +17,7 @@ from make_guidance_fixtures import generate
 class GuidanceFixtureTests(unittest.TestCase):
     @classmethod
     def setUpClass(cls):
-        cls.workspace = tempfile.TemporaryDirectory(prefix="pr-review-guidance-tests-")
+        cls.workspace = tempfile.TemporaryDirectory(prefix="wd-pr-review-guidance-tests-")
         cls.destination = Path(cls.workspace.name) / "cases"
         cls.manifest = generate(cls.destination)
         cls.cases = {case["id"]: case for case in cls.manifest["cases"]}
@@ -30,7 +30,7 @@ class GuidanceFixtureTests(unittest.TestCase):
         archive = subprocess.check_output(
             ["git", "archive", "--format=zip", case[revision]], cwd=case["repo"]
         )
-        with tempfile.TemporaryDirectory(prefix="pr-review-guidance-snapshot-") as directory:
+        with tempfile.TemporaryDirectory(prefix="wd-pr-review-guidance-snapshot-") as directory:
             # Only generated, known-safe fixture paths occur in this archive.
             zipfile.ZipFile(io.BytesIO(archive)).extractall(directory)
             environment = {**os.environ, "PYTHONPATH": "", "PYTHONNOUSERSITE": "1"}
@@ -105,7 +105,7 @@ print(json.dumps(result))
         self.assertNotIn("preferences_", (Path(unbound["repo"]) / "AGENTS.md").read_text())
         missing = self.cases["guidance-missing"]
         self.assertFalse(
-            (Path(missing["preferences_root"]) / "pr-review/unavailable-profile").exists()
+            (Path(missing["preferences_root"]) / "wd-pr-review/unavailable-profile").exists()
         )
 
     def test_fixtures_are_reproducible_and_non_destructive(self):

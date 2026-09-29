@@ -9,98 +9,67 @@ Cursor, Claude Code, Codex, or another client that supports
 Requires Node.js/npm and Git. Installing from a private repository also requires
 repository access and Git authentication.
 
+Browse the collection:
+
+```sh
+npx skills@latest add SoulEvill/wendao-skills --list
+```
+
 For Cursor, available across your projects:
 
 ```sh
-npx skills@latest add SoulEvill/wendao-skills --skill pr-review --agent cursor -g
+npx skills@latest add SoulEvill/wendao-skills --skill wd-pr-review --agent cursor -g
 ```
 
 For Cursor, Claude Code, and Codex together:
 
 ```sh
-npx skills@latest add SoulEvill/wendao-skills --skill pr-review \
+npx skills@latest add SoulEvill/wendao-skills --skill wd-pr-review \
   --agent cursor claude-code codex -g
 ```
 
 Omit `-g` to install into the current project. The
 [skills CLI](https://github.com/vercel-labs/skills) manages the installation paths
-and lets you choose symlinks or copies. This collection uses ordinary skill folders;
-no custom installer, service, or npm package is required.
+and supports symlinks or copies. Choose the agents you use: `--agent '*'` targets
+every supported agent, including ones you do not have installed.
 
-Browse the collection or update an installed skill:
+Update an installed skill:
 
 ```sh
-npx skills@latest add SoulEvill/wendao-skills --list
-npx skills@latest update pr-review -g
+npx skills@latest update wd-pr-review -g
 ```
+
+Use `-p` instead of `-g` to update the current project's installation.
+
+Git commits identify catalog versions. To pin or roll back, replace the placeholder
+below with a full commit SHA. Updates preserve the selected ref; a full SHA stays
+fixed while branches and tags can move.
+
+```sh
+npx skills@latest add 'https://github.com/SoulEvill/wendao-skills#<full-commit-sha>' \
+  --skill wd-pr-review --agent cursor -g
+```
+
+The selected commit must contain that skill name. For GitHub Enterprise or other Git
+hosts, prefer a clone URL ending in `.git#<full-commit-sha>`. The CLI also recognizes
+bare GitHub Enterprise URLs when their host is configured through `GH_HOST`; an
+unrecognized bare HTTPS host may not parse `#ref` as a Git revision. See the
+[CLI source parser](https://github.com/vercel-labs/skills/blob/7407f3893ad4dceab546ac002c3ef806e4000c73/src/source-parser.ts).
 
 ## Skills
 
+Skill names use `wd-` (Wendao), for example `/wd-pr-review`.
+
 | Skill | What it does |
 | --- | --- |
-| [pr-review](skills/pr-review/SKILL.md) | Reviews PRs across correctness, reliability, security, architecture, scalability, simplicity, reuse, tests, and docs. Offers Standard and Deep review, scoped repository guidance, and a draft before publishing. |
-
-## First review
-
-In Cursor or Claude Code, invoke `/pr-review`. In Codex, invoke `$pr-review`.
-If the skill does not appear, start a fresh session or reload the client.
-
-```text
-/pr-review Review <PR URL> at Standard level. Prepare a draft here first.
-```
-
-For a larger change:
-
-```text
-/pr-review Review <PR URL> at Deep level, including broader architecture
-and scalability. Prepare the overall comment and inline comments as a draft.
-```
-
-The local draft explains the PR's purpose, whether it achieves that purpose, and the
-flow through relevant files before showing the proposed comments. Findings link to
-their PR diff locations. The evidence summary shows findings or gaps per axis and
-explains what the verification checks established.
-
-After reviewing the draft, say `post it` to publish the proposed comments. This
-authorizes comments, not an approval or request-changes event. The reviewer refreshes
-the PR first and asks again only when material changes require a revised draft.
-
-The skill uses the active host model and reasoning effort by default. Standard and
-Deep control review coverage and investigation; they do not switch models.
-Explicit model/effort requests depend on the host's available controls. The agent
-needs repository access through its existing tools, authenticated GitHub CLI or
-connector, or a local base/head diff. Installation does not grant access or
-permission to publish.
-
-See [runtime controls](skills/pr-review/references/runtime-controls.md) for details.
-Cursor Cloud Agents and remote workers need their own skill availability; a local
-global installation alone does not deploy a skill to those environments.
-
-## Repository preferences
-
-Start with no extra configuration. To add team or personal guidance, supply a
-`preferences_root` and an explicitly bound repository key, or selected scoped files.
-Keep these sources outside the installed skill so package updates preserve them.
-
-```text
-<preferences_root>/
-  pr-review/
-    preferences.md
-    example-api/
-      instructions.md
-```
-
-Example: `Use pr-review with preferences_root=/my/preferences and
-preferences_repo=example-api for this repository.`
-
-The skill only reads applicable guidance. Feedback collection and preference
-updates belong to the user or their framework. See the
-[guidance contract](skills/pr-review/references/guidance.md).
+| [wd-pr-review](skills/wd-pr-review/README.md) | Reviews PRs across nine axes with Standard or Deep investigation, scoped repository guidance, and a draft before publishing. |
 
 ## Add a skill
 
-Add `skills/<name>/SKILL.md` with `name` and `description` frontmatter.
-Keep required resources inside that folder and add one row to the catalog above.
+Use `skills/<name>/` or one optional group level, `skills/<group>/<name>/`.
+Each skill needs `SKILL.md` and a human-facing `README.md`; groups have no `SKILL.md`.
+Names must be unique across the catalog because installation is flat by name.
+Keep required resources inside the skill folder and add one row to the catalog above.
 See [CONTRIBUTING.md](CONTRIBUTING.md) for validation and packaging checks.
 
 ## Validation
@@ -113,10 +82,10 @@ does not include an evaluation runner or benchmark. See
 ## Design and license
 
 The collection follows the self-contained, composable approach used by
-[Matt Pocock's skills](https://github.com/mattpocock/skills), with a flat layout
-for a small catalog. The portable file format comes from the
+[Matt Pocock's skills](https://github.com/mattpocock/skills). The portable file format
+comes from the
 [Agent Skills specification](https://agentskills.io/specification).
 The review rubric's sources are recorded in
-[design references](skills/pr-review/references/research.md).
+[design references](skills/wd-pr-review/references/research.md).
 
 [MIT](LICENSE).

@@ -8,12 +8,12 @@ effort; text such as "act as model X" cannot change the running model.
 Install the complete skill folder through the standard skills CLI:
 
 ```sh
-npx skills@latest add SoulEvill/wendao-skills --skill pr-review --agent cursor -g
+npx skills@latest add SoulEvill/wendao-skills --skill wd-pr-review --agent cursor -g
 ```
 
 Select `claude-code` or `codex` for those clients; the installer accepts multiple
 agents. Omit `-g` for project installation. It manages each client's discovery
-location. Invoke `/pr-review` in Cursor or Claude Code and `$pr-review` in Codex.
+location. Invoke `/wd-pr-review` in Cursor or Claude Code and `$wd-pr-review` in Codex.
 A fresh session may be needed for discovery. Automatic selection remains enabled.
 
 For manual installation, copy the whole folder with its references into a supported

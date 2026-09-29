@@ -6,7 +6,7 @@ requires-python = ">=3.11"
 dependencies = []
 
 [dependency-groups]
-dev = ["pyyaml>=6.0,<7"]
+dev = ["markdown-it-py>=3.0,<5", "pyyaml>=6.0,<7"]
 
 [tool.uv]
 package = false

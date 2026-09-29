@@ -5,13 +5,18 @@ Run from the repository root:
 ```sh
 uv sync --locked
 uv run python scripts/validate_package.py
+uv run python -m unittest discover -s tests/package -v
 uv run python -m unittest discover -s tests/pr_review -v
 bash tests/package.sh
 ```
 
-The package validator checks skill metadata and local links. The installation
-check uses the real skills CLI in a disposable project for Cursor, Claude Code,
-and Codex, and compares installed files with the source. It needs network access
+The 16 tests under `package/` cover flat and grouped discovery, unique `wd-` names,
+required skill READMEs, and Markdown links. Code examples are ignored; real broken
+links and links escaping a skill still fail.
+
+The installation check discovers every catalog skill and compares its installed
+files with the source for Cursor, Claude Code, and Codex. A temporary two-skill
+catalog also exercises flat and grouped installation. It needs network access
 and leaves global skill installations untouched.
 
 ## PR-review fixtures

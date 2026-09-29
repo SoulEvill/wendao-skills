@@ -15,7 +15,7 @@ The optional folder convention is:
 
 ```text
 <preferences_root>/
-  pr-review/
+  wd-pr-review/
     preferences.md
     example-api/
       instructions.md
@@ -23,8 +23,8 @@ The optional folder convention is:
       instructions.md
 ```
 
-- Load `pr-review/preferences.md`, if present, as general PR review preferences.
-- Load `pr-review/<preferences_repo>/instructions.md` when a repository key is supplied.
+- Load `wd-pr-review/preferences.md`, if present, as general PR review preferences.
+- Load `wd-pr-review/<preferences_repo>/instructions.md` when a repository key is supplied.
   The key is one folder name, excluding `.` and `..`, not a path. Its selection must be
   explicitly associated with the actual reviewed repository by the user/framework or
   applicable repository instructions. Do not guess from a checkout's directory name

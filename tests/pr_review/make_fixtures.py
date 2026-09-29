@@ -272,5 +272,5 @@ if __name__ == "__main__":
         "--output", type=Path, help="An empty directory; defaults to a fresh temporary directory"
     )
     arguments = parser.parse_args()
-    output = arguments.output or Path(tempfile.mkdtemp(prefix="pr-review-fixtures-"))
+    output = arguments.output or Path(tempfile.mkdtemp(prefix="wd-pr-review-fixtures-"))
     print(json.dumps(generate(output), indent=2))

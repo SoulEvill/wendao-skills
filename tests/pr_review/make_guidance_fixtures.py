@@ -58,14 +58,14 @@ HEAD = {
 }
 
 GUIDANCE = {
-    "pr-review/preferences.md": """
+    "wd-pr-review/preferences.md": """
         # Review preferences
 
         When recommending a correction, prefer a small local change that preserves the
         intended improvement. Explain a larger framework only when a local correction
         cannot satisfy the contract. I usually prefer Deep reviews for API changes.
     """,
-    "pr-review/repo-a/instructions.md": """
+    "wd-pr-review/repo-a/instructions.md": """
         # Repo A review guidance
 
         For client/**, preserve existing public keyword arguments within the current
@@ -75,7 +75,7 @@ GUIDANCE = {
         This requirement applies only to client/**. experimental/** APIs can change
         freely when maintained callers are updated.
     """,
-    "pr-review/repo-a/client-compatibility.md": """
+    "wd-pr-review/repo-a/client-compatibility.md": """
         # Client compatibility contract
 
         Client releases are deployed independently of downstream consumers. Existing
@@ -84,7 +84,7 @@ GUIDANCE = {
         within this release line. A rename may introduce a new spelling only while
         retaining the old spelling. There is no coordinated breaking release in scope.
     """,
-    "pr-review/repo-b/instructions.md": """
+    "wd-pr-review/repo-b/instructions.md": """
         # Repo B review guidance
 
         Breaking API changes are permitted for this repository, including public
@@ -92,7 +92,7 @@ GUIDANCE = {
         required when maintained callers are updated. experimental/** APIs may also
         change freely. Judge the new behavior and maintained callers on their merits.
     """,
-    "pr-review/neighbor/instructions.md": """
+    "wd-pr-review/neighbor/instructions.md": """
         # Neighbor repository review guidance
 
         All public functions in this repository must accept a keyword named
@@ -205,12 +205,12 @@ def generate(destination):
         if key is not None:
             inputs.extend(
                 [
-                    str(preferences / "pr-review/preferences.md"),
-                    str(preferences / "pr-review" / key / "instructions.md"),
+                    str(preferences / "wd-pr-review/preferences.md"),
+                    str(preferences / "wd-pr-review" / key / "instructions.md"),
                 ]
             )
             if key == "repo-a":
-                inputs.append(str(preferences / "pr-review/repo-a/client-compatibility.md"))
+                inputs.append(str(preferences / "wd-pr-review/repo-a/client-compatibility.md"))
         metadata["cases"].append(
             {
                 "id": name,
@@ -234,5 +234,5 @@ if __name__ == "__main__":
     parser = argparse.ArgumentParser(description=__doc__)
     parser.add_argument("--output", type=Path, help="An empty output directory")
     arguments = parser.parse_args()
-    output = arguments.output or Path(tempfile.mkdtemp(prefix="pr-review-guidance-"))
+    output = arguments.output or Path(tempfile.mkdtemp(prefix="wd-pr-review-guidance-"))
     print(json.dumps(generate(output), indent=2))

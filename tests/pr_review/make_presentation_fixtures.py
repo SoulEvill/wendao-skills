@@ -49,5 +49,5 @@ if __name__ == "__main__":
     parser = argparse.ArgumentParser(description=__doc__)
     parser.add_argument("--output", type=Path)
     args = parser.parse_args()
-    output = args.output or Path(tempfile.mkdtemp(prefix="pr-review-presentation-"))
+    output = args.output or Path(tempfile.mkdtemp(prefix="wd-pr-review-presentation-"))
     print(json.dumps(generate(output), indent=2))

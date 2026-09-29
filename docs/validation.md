@@ -5,16 +5,17 @@ a model-quality benchmark or an evaluation runner.
 
 ## Executed checks
 
-On 2026-09-27:
+On 2026-09-28:
 
 | Check | Result |
 | --- | --- |
-| Package metadata and local links | Passed for `pr-review` and repository documentation. |
+| Package metadata and local links | Passed for `wd-pr-review` and repository documentation. |
+| Package validator regression tests | All 16 tests passed, covering discovery, naming, READMEs, code examples, and real links. |
 | PR-review fixture tests | All 16 tests passed. |
-| Installation using `npx skills@latest` | Passed for Cursor, Claude Code, and Codex in a disposable project. Installed skill files matched the source. |
+| Installation using `npx skills@latest` | Passed for every catalog skill and a temporary catalog with flat and grouped skills. Cursor, Claude Code, and Codex installations matched source files. |
 
-The installer uses `.agents/skills/pr-review` for Cursor and Codex, and links
-`.claude/skills/pr-review` for Claude Code. Global installations are not modified.
+The installer uses `.agents/skills/wd-pr-review` for Cursor and Codex, and links
+`.claude/skills/wd-pr-review` for Claude Code. Global installations are not modified.
 GitHub Actions runs the package validator, fixture tests, and installation check.
 
 The fixture tests cover the example code and supplied contexts. They do not prove

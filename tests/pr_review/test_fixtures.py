@@ -16,7 +16,7 @@ from make_fixtures import generate
 class FixtureTests(unittest.TestCase):
     @classmethod
     def setUpClass(cls):
-        cls.workspace = tempfile.TemporaryDirectory(prefix="pr-review-fixture-tests-")
+        cls.workspace = tempfile.TemporaryDirectory(prefix="wd-pr-review-fixture-tests-")
         cls.manifest = generate(Path(cls.workspace.name) / "cases")
         cls.cases = {case["id"]: case for case in cls.manifest["cases"]}
 
@@ -29,7 +29,7 @@ class FixtureTests(unittest.TestCase):
         archive = subprocess.check_output(
             ["git", "archive", "--format=zip", case[revision]], cwd=case["repo"]
         )
-        with tempfile.TemporaryDirectory(prefix="pr-review-snapshot-") as directory:
+        with tempfile.TemporaryDirectory(prefix="wd-pr-review-snapshot-") as directory:
             # Archives contain only files created by the fixture generator.
             zipfile.ZipFile(io.BytesIO(archive)).extractall(directory)
             for relative, content in (replacements or {}).items():
